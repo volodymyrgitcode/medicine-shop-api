@@ -9,7 +9,6 @@ export const getOrders = async (req, res) => {
         }
 
         return res.status(200).json(orders);
-
     } catch (error) {
         console.error('Error retrieving orders:', error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -19,18 +18,16 @@ export const getOrders = async (req, res) => {
 export const getOrder = async (req, res) => {
     try {
         const { id } = req.params;
-
         const order = await getOrderById(id);
 
-        res.status(200).json(order);
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
 
+        res.status(200).json(order);
     } catch (error) {
         console.error('Error retrieving order:', error.message);
-        if (error.message === 'Order not found') {
-            return res.status(404).json({ error: 'Order not found' });
-        } else {
-            res.status(500).json({ error: error.message });
-        }
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -39,10 +36,8 @@ export const createOrder = async (req, res) => {
         const order = await addOrder(req.body);
 
         res.status(201).json({
-            message: "Order created successfully!",
             order,
         });
-
     } catch (error) {
         console.error('Error creating order:', error.message);
         res.status(500).json({ error: error.message });
@@ -56,14 +51,9 @@ export const deleteOrder = async (req, res) => {
         await deleteOrderById(id);
 
         res.status(204).json({ message: 'Order deleted successfully' });
-
     } catch (error) {
         console.error('Error deleting order:', error.message);
-        if (error.message === 'Order not found') {
-            return res.status(404).json({ error: 'Order not found' });
-        } else {
-            res.status(500).json({ error: error.message });
-        }
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -74,14 +64,13 @@ export const updateOrder = async (req, res) => {
 
         const updatedOrder = await updateOrderById(id, updatedData);
 
-        return res.status(200).json(updatedOrder);
+        if (updatedOrder) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
 
+        return res.status(200).json(updatedOrder);
     } catch (error) {
         console.error('Error updating order:', error.message);
-        if (error.message === 'Order not found') {
-            return res.status(404).json({ error: 'Order not found' });
-        } else {
-            res.status(500).json({ error: error.message });
-        }
+        res.status(500).json({ error: error.message });
     }
 };

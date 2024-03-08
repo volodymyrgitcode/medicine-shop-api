@@ -1,12 +1,8 @@
-import Medicine from "../models/medicine.js";
+import { Medicine } from "../models/index.js";
 
 export const getAllMedicines = async (page = 1, perPage = 10, shopIds = [], sortByPrice, sortByDate) => {
-
-    const pageNum = parseInt(page, 10) >= 0 ? parseInt(page, 10) : 1;
-    const itemsPerPage = parseInt(perPage, 10) > 0 ? parseInt(perPage, 10) : 10;
-
-    const offset = (pageNum - 1) * itemsPerPage;
-    const limit = itemsPerPage;
+    const offset = (page - 1) * perPage;
+    const limit = perPage;
 
     const options = {
         offset,
@@ -29,14 +25,14 @@ export const getAllMedicines = async (page = 1, perPage = 10, shopIds = [], sort
     const { count, rows } = await Medicine.findAndCountAll(options);
 
     const totalMedicines = count;
-    const totalPages = Math.ceil(totalMedicines / itemsPerPage);
+    const totalPages = Math.ceil(totalMedicines / perPage);
 
     return {
         data: rows,
         pagination: {
             total: totalMedicines,
             totalPages: totalPages,
-            currentPage: pageNum,
+            currentPage: page,
             perPage: itemsPerPage
         }
     };
@@ -45,22 +41,16 @@ export const getAllMedicines = async (page = 1, perPage = 10, shopIds = [], sort
 export const getMedicineById = async (id) => {
     const medicine = await Medicine.findByPk(id);
 
-    if (!medicine) {
-        throw new Error('Medicine not found');
-    }
-
     return medicine;
 };
 
 export const AddMedicine = async (data) => {
     const { name, description, imageUrl, price, stock, shopId } = data;
 
-    // Validate input data
+    // Validate input data ?
     if (!name || !price || !stock || !shopId || !imageUrl) {
         throw new Error('Name, price, stock, and shopId are required fields');
     }
-
-    console.log(data);
 
     const medicine = await Medicine.create({
         name,
@@ -77,22 +67,12 @@ export const AddMedicine = async (data) => {
 };
 
 export const deleteMedicineById = async (id) => {
-
     const medicine = await Medicine.findByPk(id);
-
-    if (!medicine) {
-        throw new Error('Medicine not found');
-    }
-
     await medicine.destroy();
 };
 
 export const updateMedicineById = async (id, updatedData) => {
     const medicine = await Medicine.findByPk(id);
-
-    if (!medicine) {
-        throw new Error('Medicine not found');
-    }
 
     updatedData.updatedAt = Date.now();
 

@@ -1,4 +1,4 @@
-import Shop from "../models/shop.js";
+import { Shop } from "../models/index.js";
 
 export const getAllShops = async () => {
     const shops = await Shop.findAll();
@@ -7,11 +7,6 @@ export const getAllShops = async () => {
 
 export const getShopById = async (id) => {
     const shop = await Shop.findByPk(id);
-
-    if (!shop) {
-        throw new Error('Shop not found');
-    }
-
     return shop;
 };
 
@@ -35,20 +30,11 @@ export const addShop = async (data) => {
 
 export const deleteShopById = async (id) => {
     const shop = await Shop.findByPk(id);
-
-    if (!shop) {
-        throw new Error('Shop not found');
-    }
-
     await shop.destroy();
 };
 
 export const updateShopById = async (id, updatedData) => {
     const shop = await Shop.findByPk(id);
-
-    if (!shop) {
-        throw new Error('Shop not found');
-    }
 
     updatedData.updatedAt = Date.now();
 

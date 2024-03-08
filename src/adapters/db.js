@@ -1,9 +1,7 @@
-import { Sequelize } from 'sequelize';
+import { sequelize } from '../models/index.js';
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-});
-
-export default sequelize;
-
+export async function connectDB() {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+    await sequelize.sync();
+}

@@ -1,6 +1,6 @@
-import Order from "../models/order.js";
-import Medicine from "../models/medicine.js";
-import OrderMedicine from "../models/OrderMedicines.js";
+import { Order } from "../models/index.js";
+import { Medicine } from "../models/index.js";
+import { OrderMedicine } from "../models/index.js";
 
 
 export const getAllOrders = async () => {
@@ -38,10 +38,6 @@ export const getAllOrders = async () => {
 export const getOrderById = async (id) => {
 
     const order = await Order.findByPk(id, { include: { model: OrderMedicine, as: 'OrderMedicines', include: { model: Medicine } } });
-
-    if (!order) {
-        throw new Error('Order not found');
-    }
 
     const orderData = {
         id: order.id,
@@ -121,21 +117,11 @@ export const addOrder = async (data) => {
 
 export const deleteOrderById = async (id) => {
     const order = await Order.findByPk(id);
-
-    if (!order) {
-        throw new Error('Order not found');
-    }
-
     await order.destroy();
 };
 
 export const updateOrderById = async (id, updatedData) => {
     const order = await Order.findByPk(id);
-
-    if (!order) {
-        throw new Error('Order not found');
-    }
-
     await order.update(updatedData);
     return order;
 };

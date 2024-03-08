@@ -2,11 +2,8 @@ import { getAllMedicines, getMedicineById, AddMedicine, deleteMedicineById, upda
 
 export const getMedicines = async (req, res) => {
     try {
-
         const { page, perPage, shopIds, sortByPrice, sortByDate } = req.query;
-
-        const shopIdArray = shopIds ? shopIds.split(',').map(id => parseInt(id)) : [];
-
+        const shopIdArray = shopIds ? shopIds.split(',') : [];
         const medicines = await getAllMedicines(page, perPage, shopIdArray, sortByPrice, sortByDate);
 
         if (!medicines || medicines.length === 0) {
@@ -14,7 +11,6 @@ export const getMedicines = async (req, res) => {
         }
 
         return res.status(200).json(medicines);
-
     } catch (error) {
         console.error('Error retrieving medicines:', error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -24,19 +20,16 @@ export const getMedicines = async (req, res) => {
 export const getMedicine = async (req, res) => {
     try {
         const { id } = req.params;
-
         const medicine = await getMedicineById(id);
 
-        res.status(200).json(medicine);
-
-    } catch (error) {
-        console.error('Error retrieving medicine:', error.message);
-        if (error.message === 'Medicine not found') {
+        if (!medicine) {
             return res.status(404).json({ error: 'Medicine not found' });
         }
-        else {
-            res.status(500).json({ error: error.message });
-        }
+
+        res.status(200).json(medicine);
+    } catch (error) {
+        console.error('Error retrieving medicine:', error.message);
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -48,7 +41,6 @@ export const createMedicine = async (req, res) => {
             message: "Record created successfully!",
             medicine,
         });
-
     } catch (error) {
         console.error('Error creating medicine:', error.message);
         console.error(error);
@@ -63,15 +55,9 @@ export const deleteMedicine = async (req, res) => {
         await deleteMedicineById(id);
 
         res.status(204).json({ message: 'Medicine deleted successfully' });
-
     } catch (error) {
         console.error('Error deleting medicine:', error.message);
-        if (error.message === 'Medicine not found') {
-            return res.status(404).json({ error: 'Medicine not found' });
-        }
-        else {
-            res.status(500).json({ error: error.message });
-        }
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -82,15 +68,13 @@ export const updateMedicne = async (req, res) => {
 
         const updatedMedicine = await updateMedicineById(id, updatedData);
 
-        return res.status(200).json(updatedMedicine);
-
-    } catch (error) {
-        console.error('Error deleting medicine:', error.message);
-        if (error.message === 'Medicine not found') {
+        if (!updatedMedicine) {
             return res.status(404).json({ error: 'Medicine not found' });
         }
-        else {
-            res.status(500).json({ error: error.message });
-        }
+
+        return res.status(200).json(updatedMedicine);
+    } catch (error) {
+        console.error('Error deleting medicine:', error.message);
+        res.status(500).json({ error: error.message });
     }
 };
