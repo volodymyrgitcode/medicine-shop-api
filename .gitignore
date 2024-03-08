@@ -1,0 +1,18 @@
+# Dependency directories
+node_modules/
+
+# Environment variables file (if using .env)
+.env
+
+# Log files
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Dependency lock files
+package-lock.json
+package.json
+yarn.lock
