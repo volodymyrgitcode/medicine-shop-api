@@ -2,8 +2,12 @@ import { getAllMedicines, getMedicineById, AddMedicine, deleteMedicineById, upda
 
 export const getMedicines = async (req, res) => {
     try {
-        const { page, perPage, shopIds, sortByPrice, sortByDate } = req.query;
+        let { page, perPage, shopIds, sortByPrice, sortByDate } = req.query;
         const shopIdArray = shopIds ? shopIds.split(',') : [];
+
+        page = parseInt(page) > 0 ? parseInt(page) : 1;
+        perPage = parseInt(perPage) > 0 ? parseInt(perPage) : 10;
+
         const medicines = await getAllMedicines(page, perPage, shopIdArray, sortByPrice, sortByDate);
 
         if (!medicines || medicines.length === 0) {

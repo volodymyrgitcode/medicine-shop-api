@@ -1,12 +1,10 @@
 import { Medicine } from "../models/index.js";
 
-export const getAllMedicines = async (page = 1, perPage = 10, shopIds = [], sortByPrice, sortByDate) => {
-    const offset = (page - 1) * perPage;
-    const limit = perPage;
+export const getAllMedicines = async (page, perPage, shopIds = [], sortByPrice, sortByDate) => {
 
     const options = {
-        offset,
-        limit,
+        offset: page,
+        limit: perPage,
         order: [],
     };
 
@@ -33,7 +31,7 @@ export const getAllMedicines = async (page = 1, perPage = 10, shopIds = [], sort
             total: totalMedicines,
             totalPages: totalPages,
             currentPage: page,
-            perPage: itemsPerPage
+            perPage: perPage
         }
     };
 };
