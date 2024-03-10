@@ -1,7 +1,15 @@
 import { Shop } from "../models/index.js";
+import { Medicine } from "../models/index.js";
 
 export const getAllShops = async () => {
-    const shops = await Shop.findAll();
+    const shops = await Shop.findAll({
+        include: [{
+            model: Medicine,
+            required: true, // Returns only shops with associated medicines
+            attributes: [] // Exclude all from the Medicine model and return shop without medicine
+        }]
+    });
+    console.log('Shops with associated stores:', shops);
     return shops;
 };
 
