@@ -195,7 +195,7 @@ Response body scheme:
 ```
 
 ```javascript
-GET /api/order/02c74807-aeed-4a82-8762-69d82b4bcc03
+GET /api/orders/02c74807-aeed-4a82-8762-69d82b4bcc03
 ```
 
 
@@ -233,4 +233,9 @@ PORT=<your_application_port>
 node src/app.js
 ```
 
+## 🔗 Links
+
+[Frontend part repository](https://github.com/volodymyrgitcode/medicine-shop-client)
+
+[Deployed project](http://20.215.33.194/)
 
